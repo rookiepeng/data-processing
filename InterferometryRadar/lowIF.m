@@ -14,7 +14,7 @@ fcarrier=32; % carrier frequency
 maxOutputFreq=5;
 
 %% read audio data
-[Y,FS] = audioread('breath.wav');
+[Y,FS] = audioread('heartbeat-01.wav');
 dataI=Y(:,1);
 dataQ=Y(:,2);
 data=dataI+1i*dataQ;
@@ -28,7 +28,7 @@ f2=(0:N-1)*fs/N; % frequency domain axis
 spec=fft(data,N);
 spec=(abs(spec(1:N/2))*2/length(dataI));
 plot(f2(1:N/2),spec);
-axis([0,maxOutputFreq,0,abs(max(spec(1:fix(maxOutputFreq/fs/2*length(spec)))))]);
+axis([0,maxOutputFreq,0,max(spec(1:fix(maxOutputFreq/fs/2*length(f2))))]);
 xlabel('Frequency (Hz)');
 ylabel('Amplitude (V)');
 title('Spectrum of the original signal');
