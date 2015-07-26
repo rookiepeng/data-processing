@@ -34,13 +34,6 @@ ylabel('Amplitude (V)');
 title('Spectrum of the original signal');
 
 %% down-converter
-% carrier=sin(2*pi*fcarrier*t)'; % carrier signal
-% carrierQ=cos(2*pi*fcarrier*t)';
-% downData=data.*carrier; % down convert
-% downDataQ=data.*carrierQ;
-% downData=downData-mean(downData); % subtract DC
-% downDataQ=downDataQ-mean(downDataQ);
-% downSpec=fft(downData+1i*downDataQ,N); % FFT
 carrier=exp(2*pi*fcarrier*t*1i)'; % carrier signal
 downData=data.*carrier; % down convert
 downData=downData-mean(downData); % subtract DC
