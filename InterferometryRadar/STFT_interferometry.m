@@ -47,7 +47,10 @@ Nfft=4096;
 
 axis_dp = ((-Nfft/2):(Nfft/2-1))*(fs/Nfft); % Axis in Doppler
 [spect,F,Time]=spectrogram(transpose(data),hanning(windowSize),overlaps,Nfft,fs);
+spect=fftshift(spect,1);
+figure;
 imagesc(Time,axis_dp,20*log10(abs(spect)/max(max(abs(spect)))),[-80 0]);
+colorbar;
 colormap hot;
 xlabel('Time (s)');
 ylabel('Doppler frequency (Hz)');
@@ -68,6 +71,5 @@ ylabel('Doppler frequency (Hz)');
 % ylabel('Doppler (Hz)');
 % colorbar;
 % colormap hot;
-
 
 
