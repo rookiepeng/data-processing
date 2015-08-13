@@ -2,17 +2,19 @@ close all;
 clear;
 clc;
 
-%% constant number
-c = 3E8; %(m/s) speed of light
-
 %% configuration
-maxPlotRange=20; % meters
-dataNum=7; % data number
+dataNum=7; % how many data
 chirpFreq=82; % (Hz) frequency of chirp signal
 BW=780E6; % bandwidth
 fs=44100; % sampling frequency
 zPadding=2^14; % zero padding 
-offset=0; % sampling offset, discard bad data
+offsetBegin=10; % sampling offset, discard bad data
+offsetEnd=316;
+maxPlotRange=20; % meters
+minPlotRange=2; % meters
+
+%% constant number
+c = 3E8; %(m/s) speed of light
 
 %% prepare data
 N=fix(fs/chirpFreq)-316; % data number in one chirp
@@ -23,11 +25,11 @@ antennaAngleRad = antennaAngle*pi/180; % Rad angle
 disAxial = linspace(0,maxRange,zPadding/2); % distance axial
 
 %%
+ref=0;
 % fid = fopen('ref.dat');
 % REF = textscan(fid,'%f');
 % fclose(fid);
 % ref=REF{1}';
-ref=0;
 
 %% read data
 for i=1:dataNum
@@ -37,19 +39,24 @@ for i=1:dataNum
         str=strcat('grass person-',int2str(i),'.wav');
     end
     [Y,fs] = audioread(str);
-    [spec(i,:),diffspec(i,:)] = oneDir(fs,Y(:,1),Y(:,2),chirpFreq,BW,zPadding,ref);
+    [spec(i,:),diffspec(i,:)] = oneDir(fs,Y(:,1),Y(:,2),chirpFreq,BW,zPadding,offsetBegin,offsetEnd,ref);
 end
 
+minRange2Index=fix(zPadding/2*minPlotRange/maxRange);
+maxRange2Index=fix(zPadding/2*maxPlotRange/maxRange);
 
-X = disAxial(300:fix(zPadding/2*maxPlotRange/maxRange))'*cos(antennaAngleRad);
-Y = disAxial(300:fix(zPadding/2*maxPlotRange/maxRange))'*sin(antennaAngleRad);
-spec=spec(:,(300:fix(zPadding/2*maxPlotRange/maxRange)))-max(max(spec(:,(300:fix(zPadding/2*maxPlotRange/maxRange)))));
+X = disAxial(minRange2Index:maxRange2Index)'*cos(antennaAngleRad);
+Y = disAxial(minRange2Index:maxRange2Index)'*sin(antennaAngleRad);
+spec=spec(:,(minRange2Index:maxRange2Index))-max(max(spec(:,(minRange2Index:maxRange2Index))));
 pcolor(Y,X,spec');
+colorbar;
 axis equal;
-shading interp;
+%shading interp;
+shading flat;
 
 figure;
-diffspec=diffspec(:,(300:fix(zPadding/2*maxPlotRange/maxRange)))-max(max(diffspec(:,(300:fix(zPadding/2*maxPlotRange/maxRange)))));
+diffspec=diffspec(:,(minRange2Index:maxRange2Index))-max(max(diffspec(:,(minRange2Index:maxRange2Index))));
 pcolor(Y,X,diffspec');
+colorbar;
 axis equal;
 shading interp;
