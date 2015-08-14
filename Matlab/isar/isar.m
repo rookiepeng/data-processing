@@ -94,22 +94,24 @@ Nfft_dop = 256; % Number of Doppler FFT points.
 
 maximum = max(max(abs(rp)));
 
-% Generation of ISAR video
-% fig = figure;
-% aviobj = VideoWriter('Example_x.avi');
-% open(aviobj);
-% for k = 1:(Nchip/16):(N_CPI-Nchip+1)
-%    rp_chip = rp(k:(k+Nchip-1),:);
-%    rp_chip = rp_chip.*repmat(hanning(Nchip),1,Nt);
-%    im = fft(rp_chip,Nfft_dop,1); % Frame of ISAR video
-%    im = fftshift(im,1);
-%    h = imagesc(linspace(0,max_range,zpad/2),linspace(0,chirp,Nfft_dop),20*log10(abs(im(:,1:size(im,2)/2)/maximum)),[-10 0]);
-%    colorbar;
-%    colormap jet;
-%    axis([0,25,0,chirp])
-%    F = getframe(fig);
-%    writeVideo(aviobj,F);
-% end
-% close(fig)
-% close(aviobj);
+%% Generation of ISAR video
+fig = figure;
+aviobj = VideoWriter('Example_x.avi');
+open(aviobj);
+for k = 1:(Nchip/16):(N_CPI-Nchip+1)
+   rp_chip = rp(k:(k+Nchip-1),:);
+   rp_chip = rp_chip.*repmat(hanning(Nchip),1,Nt);
+   im = fft(rp_chip,Nfft_dop,1); % Frame of ISAR video
+   im = fftshift(im,1);
+   h = imagesc(linspace(0,max_range,zpad/2),linspace(0,chirp,Nfft_dop),20*log10(abs(im(:,1:size(im,2)/2)/maximum)),[-10 0]);
+   colorbar;
+   colormap jet;
+   axis([0,25,0,chirp])
+   savefig(strcat('isar-',k,'.fig'));
+   saveas(fig,strcat('isar-',k,'.png'));
+   F = getframe(fig);
+   writeVideo(aviobj,F);
+end
+close(fig)
+close(aviobj);
 
