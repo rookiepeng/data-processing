@@ -9,9 +9,9 @@ clear;
 close all;
 
 %% system parameters
-chirp=82; % (Hz) frequency of chirp signal
-dataName='2d person-05';
-BW=780E6;
+chirp=80; % (Hz) frequency of chirp signal
+dataName='glass 3m person-02';
+BW=1000E6;
 offsetBegin=0;
 offsetEnd=316;
 thresh = 0.4;
@@ -72,7 +72,7 @@ zpad = 10*N;
 [nr,nc]=size(sif);
 
 %RTI plot
-figure(1);
+figure;
 spec=abs(fft(sif,zpad,2));
 v = 20*log10(spec);
 %v = abs(fft(sif,zpad,2));
@@ -87,7 +87,7 @@ xlabel('range (m)');
 title('Range vs. Time Intensity');
 
 figure
-plot(linspace(0,max_range,zpad/2),spec(10,1:size(v,2)/2)/max(max(spec(10,1:size(v,2)/2))));
+plot(linspace(0,max_range,zpad/2),spec(200,1:size(v,2)/2)/max(max(spec(200,1:size(v,2)/2))));
 axis([1,20,0,1]);
 xlabel('range (m)');
 ylabel('Amplitude');
