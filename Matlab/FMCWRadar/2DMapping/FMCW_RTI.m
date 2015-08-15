@@ -86,18 +86,30 @@ ylabel('time (s)');
 xlabel('range (m)');
 title('Range vs. Time Intensity');
 
-%% 
 figure
-for ii=1:60:nr
-    plot(linspace(0,max_range,zpad/2),spec(:,1:size(v,2)/2)/max(max(spec(:,1:size(v,2)/2))));
-    hold on;
-end
-hold off;
-axis([0,20,0,1]);
+plot(linspace(0,max_range,zpad/2),spec(10,1:size(v,2)/2)/max(max(spec(10,1:size(v,2)/2))));
+axis([1,20,0,1]);
 xlabel('range (m)');
 ylabel('Amplitude');
 
-%% average spectrum
+figure
+for ii=1:6:nr
+    plot(linspace(0,max_range,zpad/2),spec(ii,1:size(v,2)/2)/max(max(spec(ii,1:size(v,2)/2))));
+    hold on;
+end
+hold off;
+axis([1,20,0,1]);
+xlabel('range (m)');
+ylabel('Amplitude');
+
+figure;
+diffspec=std(spec,0,1);
+plot(linspace(0,max_range,zpad/2),diffspec(1:size(v,2)/2)/max(max(diffspec(1:size(v,2)/2))));
+axis([1,20,0,1]);
+xlabel('range (m)');
+ylabel('Amplitude');
+
+%% average
 % figure(2)
 % avg=mean(sif,1)- ref(offset:N-1);
 % avg=avg-mean(avg);
@@ -105,8 +117,6 @@ ylabel('Amplitude');
 % f2=(0:zpad-1)*FS/zpad;
 % plot(f2(1:zpad/2),avgFft(1:zpad/2));
 
-
-%% clutter rejection
 % figure(3);
 % sif2 = sif(2:size(sif,1),:)-sif(1:size(sif,1)-1,:);
 % v = fft(sif2,zpad,2);
