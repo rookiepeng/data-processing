@@ -3,16 +3,16 @@ clear;
 clc;
 
 %% configuration
-dataName='two car';
-dataNum=27; % how many data
-chirpFreq=82; % (Hz) frequency of chirp signal
-BW=780E6; % bandwidth
+dataName='car person1';
+dataNum=29; % how many data
+chirpFreq=80; % (Hz) frequency of chirp signal
+BW=1000E6; % bandwidth
 fs=44100; % sampling frequency
 zPadding=2^14; % zero padding 
 offsetBegin=10; % sampling offset, discard bad data
 offsetEnd=316;
 maxPlotRange=20; % meters
-minPlotRange=2; % meters
+minPlotRange=1; % meters
 angleStep=4;
 
 %% constant number
@@ -44,8 +44,8 @@ for i=1:dataNum
     [spec(i,:),diffspec(i,:)] = oneDir(fs,Y(:,1),Y(:,2),chirpFreq,BW,zPadding,offsetBegin,offsetEnd,ref);
 end
 
-spec=flipud(spec);
-diffspec=flipud(diffspec);
+%spec=flipud(spec);
+%diffspec=flipud(diffspec);
 minRange2Index=fix(zPadding/2*minPlotRange/maxRange);
 maxRange2Index=fix(zPadding/2*maxPlotRange/maxRange);
 

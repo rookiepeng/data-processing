@@ -10,8 +10,8 @@ close all;
 
 %% system parameters
 dataName='isar 813 2';
-chirp=82; % (Hz) frequency of chirp signal
-BW=780E6;
+chirp=80; % (Hz) frequency of chirp signal
+BW=1000E6;
 offsetBegin=0;
 offsetEnd=316;
 thresh = 0.4;
@@ -86,6 +86,7 @@ colormap hot;
 ylabel('time (s)');
 xlabel('range (m)');
 title('Range vs. Time Intensity');
+axis([1,20,0,max(time)]);
 
 %%
 [N_CPI,Nt] = size(rp); % rp are the range profiles stacked in raws
@@ -95,23 +96,55 @@ Nfft_dop = 256; % Number of Doppler FFT points.
 maximum = max(max(abs(rp)));
 
 %% Generation of ISAR video
-fig = figure;
-aviobj = VideoWriter('Example_x.avi');
-open(aviobj);
+% fig = figure;
+% aviobj = VideoWriter('Example_x.avi');
+% open(aviobj);
+% for k = 1:(Nchip/16):(N_CPI-Nchip+1)
+%    rp_chip = rp(k:(k+Nchip-1),:);
+%    rp_chip = rp_chip.*repmat(hanning(Nchip),1,Nt);
+%    im = fft(rp_chip,Nfft_dop,1); % Frame of ISAR video
+%    im = fftshift(im,1);
+%    h = imagesc(linspace(0,max_range,zpad/2),linspace(-chirp/2,chirp/2,Nfft_dop),20*log10(abs(im(:,1:size(im,2)/2)/maximum)),[-10 0]);
+%    colorbar;
+%    colormap jet;
+%    axis([0,25,-chirp/2,chirp/2])
+%    savefig(strcat('isar-',int2str(k),'.fig'));
+%    saveas(fig,strcat('isar-',int2str(k),'.png'));
+%    F = getframe(fig);
+%    writeVideo(aviobj,F);
+% end
+% close(fig)
+% close(aviobj);
+
+% fig = figure;
+% 
+% k=5229;
+% 
+% rp_chip = rp(k:(k+Nchip-1),:);
+% rp_chip = rp_chip.*repmat(hanning(Nchip),1,Nt);
+% im = fft(rp_chip,Nfft_dop,1); % Frame of ISAR video
+% im = fftshift(im,1);
+% h = imagesc(linspace(0,max_range,zpad/2),linspace(-chirp/2,chirp/2,Nfft_dop),20*log10(abs(im(:,1:size(im,2)/2)/maximum)),[-10 0]);
+% colorbar;
+% colormap jet;
+% axis([1,20,-chirp/2,chirp/2]);
+% savefig(strcat('isar-',int2str(k),'.fig'));
+% saveas(fig,strcat('isar-',int2str(k),'.png'));
+
+fig=figure;
 for k = 1:(Nchip/16):(N_CPI-Nchip+1)
    rp_chip = rp(k:(k+Nchip-1),:);
    rp_chip = rp_chip.*repmat(hanning(Nchip),1,Nt);
    im = fft(rp_chip,Nfft_dop,1); % Frame of ISAR video
    im = fftshift(im,1);
-   h = imagesc(linspace(0,max_range,zpad/2),linspace(0,chirp,Nfft_dop),20*log10(abs(im(:,1:size(im,2)/2)/maximum)),[-10 0]);
+   h = imagesc(linspace(0,max_range,zpad/2),linspace(-chirp/2,chirp/2,Nfft_dop),20*log10(abs(im(:,1:size(im,2)/2)/maximum)),[-10 0]);
    colorbar;
    colormap jet;
-   axis([0,25,0,chirp])
-   savefig(strcat('isar-',k,'.fig'));
-   saveas(fig,strcat('isar-',k,'.png'));
-   F = getframe(fig);
-   writeVideo(aviobj,F);
+   axis([0,25,-chirp/2,chirp/2])
+   savefig(strcat('isar-',int2str(k),'.fig'));
+   saveas(fig,strcat('isar-',int2str(k),'.png'));
 end
-close(fig)
-close(aviobj);
+
+
+
 
