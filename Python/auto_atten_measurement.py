@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 ##
-# Automated measurement code for attenuator
+# Automated measurement script for attenuator
+# Python 3
 #
 # Instruments:
 #        1) Agilent 8722ES Vector Network Analyzer
