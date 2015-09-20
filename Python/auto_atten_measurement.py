@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 
 ##
 # Automated measurement script for attenuator
@@ -10,6 +10,9 @@
 #
 # Required driver:
 #        1) National Instruments 488.2 driver
+#
+# Required Python Library:
+#        1) PyVISA
 #
 # Saved data file:
 #        1) "amp": Amplitude data in dB
@@ -39,7 +42,7 @@ voltStop = 1400	#mV
 
 rm = visa.ResourceManager()
 res = rm.list_resources()
-for x in range(0, len(my)):
+for x in range(0, len(res)):
 	print("{}. ".format(x) + res[x] + ", ", end="")
 
 vnaNumber = input('Select the VNA Number --> ')
@@ -55,14 +58,14 @@ power.write(":sour1:volt "+"0")
 power.write(":sens1:curr:prot 0.2")
 power.write(":outp on")
 
-vna.write(“FORM4“)
+vna.write("FORM4")
 
 for voltmm in range (voltInit, voltStop + voltStep, voltStep):
 	volt = voltmm / 1000
 	power.write(":sour:volt " + str(volt))
 	print("Current Voltage = " + str(volt) + "V\n")
 
-	vna.write("LOGM”)
+	vna.write("LOGM")
 	time.sleep(5)	# 5s
 	vna.write("OUTPFORM")
 	amp = vna.read_raw()
@@ -75,13 +78,13 @@ for voltmm in range (voltInit, voltStop + voltStep, voltStep):
 	phs = phs.decode("utf-8")
 	phs = phs.replace('\n', ',')
 
-	f=open('amp', 'a')
-	f.write(amp + "\n")
-	f.close()
+	famp = open('amp', 'a')
+	famp.write(amp + "\n")
+	famp.close()
 
-	f=open('phs', 'a')
-	f.write(phs + "\n")
-	f.close()
+	fphs = open('phs', 'a')
+	fphs.write(phs + "\n")
+	fphs.close()
 
 power.write(":outp off")
 vna.close()
