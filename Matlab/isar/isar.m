@@ -9,12 +9,12 @@ clear;
 close all;
 
 %% system parameters
-dataName='isar 813 2';
-chirp=80; % (Hz) frequency of chirp signal
-BW=1000E6;
-offsetBegin=0;
-offsetEnd=316;
-thresh = 0.4;
+dataName='corridor2';
+chirp=155; % (Hz) frequency of chirp signal
+BW=2000E6;
+offsetBegin=10;
+offsetEnd=950;
+thresh = 0.6;
 
 %% constants
 c = 3E8; %(m/s) speed of light
@@ -91,25 +91,26 @@ axis([1,20,0,max(time)]);
 %%
 [N_CPI,Nt] = size(rp); % rp are the range profiles stacked in raws
 Nchip = 64; % Number of range profiles for each video ISAR image.
-Nfft_dop = 256; % Number of Doppler FFT points.
+Nfft_dop = 512; % Number of Doppler FFT points.
 
-maximum = max(max(abs(rp)));
+%maximum = max(max(abs(rp)));
 
 %% Generation of ISAR video
 % fig = figure;
 % aviobj = VideoWriter('Example_x.avi');
 % open(aviobj);
-% for k = 1:(Nchip/16):(N_CPI-Nchip+1)
+% for k = 1:(Nchip/2):(N_CPI-Nchip+1)
 %    rp_chip = rp(k:(k+Nchip-1),:);
 %    rp_chip = rp_chip.*repmat(hanning(Nchip),1,Nt);
 %    im = fft(rp_chip,Nfft_dop,1); % Frame of ISAR video
 %    im = fftshift(im,1);
-%    h = imagesc(linspace(0,max_range,zpad/2),linspace(-chirp/2,chirp/2,Nfft_dop),20*log10(abs(im(:,1:size(im,2)/2)/maximum)),[-10 0]);
+%    maximum=max(max(abs(im)));
+%    h = imagesc(linspace(0,max_range,zpad/2),linspace(-chirp/2,chirp/2,Nfft_dop),20*log10(abs(im(:,1:size(im,2)/2)/maximum)),[-20 0]);
 %    colorbar;
 %    colormap jet;
-%    axis([0,25,-chirp/2,chirp/2])
-%    savefig(strcat('isar-',int2str(k),'.fig'));
-%    saveas(fig,strcat('isar-',int2str(k),'.png'));
+%    axis([0,15,-chirp/2,chirp/2])
+%    %savefig(strcat('isar-',int2str(k),'.fig'));
+%    %saveas(fig,strcat('isar-',int2str(k),'.png'));
 %    F = getframe(fig);
 %    writeVideo(aviobj,F);
 % end
@@ -131,19 +132,20 @@ maximum = max(max(abs(rp)));
 % savefig(strcat('isar-',int2str(k),'.fig'));
 % saveas(fig,strcat('isar-',int2str(k),'.png'));
 
-fig=figure;
-for k = 1:(Nchip/16):(N_CPI-Nchip+1)
-   rp_chip = rp(k:(k+Nchip-1),:);
-   rp_chip = rp_chip.*repmat(hanning(Nchip),1,Nt);
-   im = fft(rp_chip,Nfft_dop,1); % Frame of ISAR video
-   im = fftshift(im,1);
-   h = imagesc(linspace(0,max_range,zpad/2),linspace(-chirp/2,chirp/2,Nfft_dop),20*log10(abs(im(:,1:size(im,2)/2)/maximum)),[-10 0]);
-   colorbar;
-   colormap jet;
-   axis([0,25,-chirp/2,chirp/2])
-   savefig(strcat('isar-',int2str(k),'.fig'));
-   saveas(fig,strcat('isar-',int2str(k),'.png'));
-end
+% fig=figure;
+% for k = 1:(Nchip/2):(N_CPI-Nchip+1)
+%    rp_chip = rp(k:(k+Nchip-1),:);
+%    rp_chip = rp_chip.*repmat(hanning(Nchip),1,Nt);
+%    im = fft(rp_chip,Nfft_dop,1); % Frame of ISAR video
+%    im = fftshift(im,1);
+%    maximum=max(max(abs(im)));
+%    h = imagesc(linspace(0,max_range,zpad/2),linspace(-chirp/2,chirp/2,Nfft_dop),20*log10(abs(im(:,1:size(im,2)/2)/maximum)),[-25 0]);
+%    colorbar;
+%    colormap jet;
+%    axis([0,15,-chirp/2,chirp/2])
+%    savefig(strcat('isar-',int2str(k),'.fig'));
+%    saveas(fig,strcat('isar-',int2str(k),'.png'));
+% end
 
 
 
