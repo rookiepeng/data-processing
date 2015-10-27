@@ -15,16 +15,25 @@
 #        1) PyVISA
 #
 # Saved data file:
-#        1) "amp <timestamp>": Amplitude data in dB
-#                              V1[amp(f1),amp(f2),...,amp(fn)]
-#                              V2[amp(f1),amp(f2),...,amp(fn)]
-#                              ...
-#                              Vm[amp(f1),amp(f2),...,amp(fn)]
-#        2) "phs <timestamp>": Phase data in degree
-#                              V1[phs(f1),phs(f2),...,phs(fn)]
-#                              V2[phs(f1),phs(f2),...,phs(fn)]
-#                              ...
-#                              Vm[phs(f1),phs(f2),...,phs(fn)]
+#        1) "Region1 <timestamp>": VI(mV) VQ(mV) Amp(dB) Phase(Degree)
+#        1) "Region2 <timestamp>": VI(mV) VQ(mV) Amp(dB) Phase(Degree)
+#        1) "Region3 <timestamp>": VI(mV) VQ(mV) Amp(dB) Phase(Degree)
+#        1) "Region4 <timestamp>": VI(mV) VQ(mV) Amp(dB) Phase(Degree)
+#
+#            \   Region4  /
+#             \          /
+#		  	   \        /
+#			    \      /
+#			     \    /
+#		Region3   \  /   Region1
+#                  \/    
+#				   /\
+#			      /  \
+#			     /    \
+#			    /      \
+#			   /        \
+#             /          \
+#			 /  Region2   \
 #
 # Version 1
 #
@@ -96,10 +105,10 @@ for voltmm in range (voltInit, voltStop + voltStep, voltStep):
 	phs = phs.decode("utf-8")
 	markPhs = phs[1:14]
 
-	famp = open('phase1 ' + timestamp, 'a')
+	famp = open('Region1 ' + timestamp, 'a')
 	famp.write(str(voltmm) + " " + str(770) + " " + markAmp + " " + markPhs + "\n" )
 	famp.close()
-	
+
 for voltmm in range (voltInit, voltStop + voltStep, voltStep):
 	volt = voltmm / 1000
 	power.write(":sour2:volt " + str(volt))
@@ -123,7 +132,7 @@ for voltmm in range (voltInit, voltStop + voltStep, voltStep):
 	phs = phs.decode("utf-8")
 	markPhs = phs[1:14]
 
-	famp = open('phase2 ' + timestamp, 'a')
+	famp = open('Region2 ' + timestamp, 'a')
 	famp.write(str(1500) + " " +str(voltmm) + " " + markAmp + " " + markPhs + "\n" )
 	famp.close()
 
@@ -150,10 +159,10 @@ for voltmm in range (voltStop, voltInit - voltStep, -voltStep):
 	phs = phs.decode("utf-8")
 	markPhs = phs[1:14]
 
-	famp = open('phase3 ' + timestamp, 'a')
+	famp = open('Region3 ' + timestamp, 'a')
 	famp.write(str(voltmm) + " " + str(1500) + " " + markAmp + " " + markPhs + "\n" )
 	famp.close()
-	
+
 for voltmm in range (voltStop, voltInit - voltStep, -voltStep):
 	volt = voltmm / 1000
 	power.write(":sour2:volt " + str(volt))
@@ -177,7 +186,7 @@ for voltmm in range (voltStop, voltInit - voltStep, -voltStep):
 	phs = phs.decode("utf-8")
 	markPhs = phs[1:14]
 
-	famp = open('phase4 ' + timestamp, 'a')
+	famp = open('Region4 ' + timestamp, 'a')
 	famp.write(str(770) + " " + str(voltmm) + " " + markAmp + " " + markPhs + "\n" )
 	famp.close()
 
