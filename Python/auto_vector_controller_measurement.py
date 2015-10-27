@@ -26,7 +26,7 @@
 #			    \      /
 #			     \    /
 #		Region3   \  /   Region1
-#                  \/    
+#                  \/
 #				   /\
 #			      /  \
 #			     /    \
@@ -79,8 +79,8 @@ power.write(":outp2 on")
 
 vna.write("S21")
 vna.write("FORM4")
-vna.write("MARKBUCK688")
-
+vna.write("MARK1")
+vna.write("MARKBUCK688")  # set the Mark to 688th point, which is 24.3 GHz with the range from 20 GHz to 30 GHz and 1601 points
 
 for voltmm in range (voltInit, voltStop + voltStep, voltStep):
 	volt = voltmm / 1000
