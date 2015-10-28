@@ -82,6 +82,7 @@ vna.write("FORM4")
 vna.write("MARK1")
 vna.write("MARKBUCK688")  # set the Mark to 688th point, which is 24.3 GHz with the range from 20 GHz to 30 GHz and 1601 points
 
+
 for voltmm in range (voltInit, voltStop + voltStep, voltStep):
 	volt = voltmm / 1000
 	power.write(":sour1:volt " + str(volt))
@@ -98,7 +99,7 @@ for voltmm in range (voltInit, voltStop + voltStep, voltStep):
 
 	print("-> Change to Phase View")
 	vna.write("PHAS")
-	time.sleep(5)	# 5s
+	time.sleep(1)	# 5s
 	print("-> Read Phase Data\n")
 	vna.write("OUTPMARK1")
 	phs = vna.read_raw()
@@ -125,7 +126,7 @@ for voltmm in range (voltInit, voltStop + voltStep, voltStep):
 
 	print("-> Change to Phase View")
 	vna.write("PHAS")
-	time.sleep(5)	# 5s
+	time.sleep(1)	# 5s
 	print("-> Read Phase Data\n")
 	vna.write("OUTPMARK1")
 	phs = vna.read_raw()
@@ -152,7 +153,7 @@ for voltmm in range (voltStop, voltInit - voltStep, -voltStep):
 
 	print("-> Change to Phase View")
 	vna.write("PHAS")
-	time.sleep(5)	# 5s
+	time.sleep(1)	# 5s
 	print("-> Read Phase Data\n")
 	vna.write("OUTPMARK1")
 	phs = vna.read_raw()
@@ -179,7 +180,7 @@ for voltmm in range (voltStop, voltInit - voltStep, -voltStep):
 
 	print("-> Change to Phase View")
 	vna.write("PHAS")
-	time.sleep(5)	# 5s
+	time.sleep(1)	# 5s
 	print("-> Read Phase Data\n")
 	vna.write("OUTPMARK1")
 	phs = vna.read_raw()
