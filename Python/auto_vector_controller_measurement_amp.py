@@ -48,7 +48,7 @@ import visa
 
 voltInit = 770	#mV
 voltStep = 5	#mV
-voltStop = 1500	#mV
+voltStop = 1510	#mV
 
 now = now=datetime.datetime.now()
 timestamp = now.strftime("%Y%m%d %H%M%S")
@@ -87,7 +87,9 @@ count = 0;
 for voltInit in range (770, 1140, 10):
 	voltStop = voltStop - 10
 	count = count + 1
+	print("######## Voltage range: " + str(voltInit) + "V to " + str(voltStop) + "V ########\n")
 
+	print("### Region 1 ###")
 	for voltmm in range (voltInit, voltStop + voltStep, voltStep):
 		volt = voltmm / 1000
 		power.write(":sour1:volt " + str(volt))
@@ -112,9 +114,10 @@ for voltInit in range (770, 1140, 10):
 		markPhs = phs[1:14]
 
 		famp = open(str(count) + 'Region1 ' + timestamp, 'a')
-		famp.write(str(voltmm) + " " + str(770) + " " + markAmp + " " + markPhs + "\n" )
+		famp.write(str(voltmm) + " " + str(voltInit) + " " + markAmp + " " + markPhs + "\n" )
 		famp.close()
 
+	print("### Region 2 ###")
 	for voltmm in range (voltInit, voltStop + voltStep, voltStep):
 		volt = voltmm / 1000
 		power.write(":sour2:volt " + str(volt))
@@ -139,9 +142,10 @@ for voltInit in range (770, 1140, 10):
 		markPhs = phs[1:14]
 
 		famp = open(str(count) + 'Region2 ' + timestamp, 'a')
-		famp.write(str(1500) + " " +str(voltmm) + " " + markAmp + " " + markPhs + "\n" )
+		famp.write(str(voltStop) + " " +str(voltmm) + " " + markAmp + " " + markPhs + "\n" )
 		famp.close()
 
+	print("### Region 3 ###")
 	for voltmm in range (voltStop, voltInit - voltStep, -voltStep):
 		volt = voltmm / 1000
 		power.write(":sour1:volt " + str(volt))
@@ -166,9 +170,10 @@ for voltInit in range (770, 1140, 10):
 		markPhs = phs[1:14]
 
 		famp = open(str(count) + 'Region3 ' + timestamp, 'a')
-		famp.write(str(voltmm) + " " + str(1500) + " " + markAmp + " " + markPhs + "\n" )
+		famp.write(str(voltmm) + " " + str(voltStop) + " " + markAmp + " " + markPhs + "\n" )
 		famp.close()
 
+	print("### Region 4 ###")
 	for voltmm in range (voltStop, voltInit - voltStep, -voltStep):
 		volt = voltmm / 1000
 		power.write(":sour2:volt " + str(volt))
@@ -193,7 +198,7 @@ for voltInit in range (770, 1140, 10):
 		markPhs = phs[1:14]
 
 		famp = open(str(count) + 'Region4 ' + timestamp, 'a')
-		famp.write(str(770) + " " + str(voltmm) + " " + markAmp + " " + markPhs + "\n" )
+		famp.write(str(voltInit) + " " + str(voltmm) + " " + markAmp + " " + markPhs + "\n" )
 		famp.close()
 
 power.write(":outp1 off")
