@@ -16,9 +16,9 @@
 #
 # Saved data file:
 #        1) "Region1 <timestamp>": VI(mV) VQ(mV) Amp(dB) Phase(Degree)
-#        1) "Region2 <timestamp>": VI(mV) VQ(mV) Amp(dB) Phase(Degree)
-#        1) "Region3 <timestamp>": VI(mV) VQ(mV) Amp(dB) Phase(Degree)
-#        1) "Region4 <timestamp>": VI(mV) VQ(mV) Amp(dB) Phase(Degree)
+#        2) "Region2 <timestamp>": VI(mV) VQ(mV) Amp(dB) Phase(Degree)
+#        3) "Region3 <timestamp>": VI(mV) VQ(mV) Amp(dB) Phase(Degree)
+#        4) "Region4 <timestamp>": VI(mV) VQ(mV) Amp(dB) Phase(Degree)
 #
 #            \   Region4  /
 #             \          /
