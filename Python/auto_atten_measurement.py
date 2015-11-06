@@ -37,9 +37,9 @@ import datetime
 import time
 import visa
 
-voltInit = 0	#mV
-voltStep = 10	#mV
-voltStop = 1400	#mV
+voltInit = 770	#mV
+voltStep = 5	#mV
+voltStop = 1500	#mV
 
 now = now=datetime.datetime.now()
 timestamp = now.strftime("%Y%m%d %H%M%S")
@@ -84,7 +84,7 @@ for voltmm in range (voltInit, voltStop + voltStep, voltStep):
 
 	print("-> Change to Phase View")
 	vna.write("PHAS")
-	time.sleep(5)	# 5s
+	time.sleep(1)	# 5s
 	print("-> Read Phase Data\n")
 	vna.write("OUTPFORM")
 	phs = vna.read_raw()
