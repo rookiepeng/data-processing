@@ -36,6 +36,13 @@ import datetime
 import time
 import visa
 
+## User configuration
+angleStart = -90   # Start angle
+angleStop = 90  # Stop angle
+angleStep = 2   # Angle steps
+
+
+## Start to run
 now = now=datetime.datetime.now()
 timestamp = now.strftime("%Y%m%d %H%M%S")
 
@@ -52,16 +59,12 @@ print(vna.query("*IDN?"))
 vna.write("S21")    # select S21
 vna.write("FORM4")  # select readout format
 
-angleStart = int(input('Angle start from (Degree) --> '))   #
-angleStop = int(input('Angle stop to (Degree) --> '))
-angleStep = int(input('Angle rotating step (Degree) --> '))
+megName='Meg ' + timestamp
+phsName='Phs ' + timestamp
 
-megName='Meg ' + angleStart + '_' + angleStop + '_' + angleStep + '_' + timestamp
-phsName='Phs ' + angleStart + '_' + angleStop + '_' + angleStep + '_' + timestamp
+for angle in range (angleStart, angleStop+angleStep, angleStep):
 
-for voltInit in angle (angleStart, angleStop, angleStep):
-
-    measure = input('Press enter to measure ' + str(angle) + ' --> ')
+    measure = input('Press enter to measure ' + str(angle) + 'degrees' + ' --> ')
     
     print("-> Change to Log Mag View")
     vna.write("LOGM")
@@ -93,7 +96,5 @@ for voltInit in angle (angleStart, angleStop, angleStep):
     fphs.write(phs + "\n")
     fphs.close()
 
-#power.write(":outp off")
 vna.close()
-#power.close()
 print("--Finish--")
