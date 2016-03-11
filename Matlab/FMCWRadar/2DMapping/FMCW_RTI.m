@@ -9,7 +9,7 @@ clear;
 close all;
 
 %% system parameters
-chirp=80; % (Hz) frequency of chirp signal
+chirp=500; % (Hz) frequency of chirp signal
 dataName='glass 3m person-02';
 BW=1000E6;
 offsetBegin=0;

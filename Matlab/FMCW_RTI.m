@@ -9,11 +9,12 @@ clear;
 close all;
 
 %% system parameters
-chirp=80; % (Hz) frequency of chirp signal
-dataName='glass 3m person-02';
-BW=1000E6;
-offsetBegin=0;
-offsetEnd=316;
+chirp=295; % (Hz) frequency of chirp signal
+dataName='person far';
+BW=600E6;
+offsetBegin=14;
+%offsetEnd=292+37;
+offsetEnd=292;
 thresh = 0.4;
 
 %% constants
@@ -68,8 +69,10 @@ for jj = 1:size(sif,2);
 end
 
 %% FFT
-zpad = 10*N;
+zpad = 4096*4;
 [nr,nc]=size(sif);
+
+%sif=sif.*repmat(hanning(nc)',nr,1);
 
 %RTI plot
 figure;
@@ -82,32 +85,34 @@ imagesc(linspace(0,max_range,zpad),time,S-m,[-20,0]);
 %imagesc(linspace(0,max_range,zpad),time,S/m,[0,1]);
 colorbar;
 colormap hot;
-ylabel('Time (s)');
-xlabel('Range (m)');
+ylabel('time (s)');
+xlabel('range (m)');
 title('Range vs. Time Intensity');
 
 figure
-subplot(3,1,1),plot(linspace(0,max_range,zpad/2),spec(200,1:size(v,2)/2)/max(max(spec(200,1:size(v,2)/2))));
-axis([1,12,0,1]);
-xlabel('Range (m)');
-ylabel('Normalized amplitude (V)');
+plot(linspace(0,max_range,zpad/2),spec(200,1:size(v,2)/2)/max(max(spec(200,1:size(v,2)/2))));
+axis([0,8,0,1]);
+xlabel('range (m)');
+ylabel('Amplitude');
 
-subplot(3,1,2);
-for ii=1:6:nr
+figure
+for ii=15:53:nr-40
+    %spec(ii,1:size(v,2)/2)=spec(ii,1:size(v,2)/2)/max(max(spec(ii,1:size(v,2)/2)));
     plot(linspace(0,max_range,zpad/2),spec(ii,1:size(v,2)/2)/max(max(spec(ii,1:size(v,2)/2))));
+    %plot(linspace(0,max_range,zpad/2),spec(ii,1:size(v,2)/2));
     hold on;
 end
 hold off;
-axis([1,12,0,1]);
-xlabel('Range (m)');
-ylabel('Normalized amplitude (V)');
+axis([0,8,0,1]);
+xlabel('range (m)');
+ylabel('Amplitude');
 
-
-diffspec=std(spec,0,1);
-subplot(3,1,3),plot(linspace(0,max_range,zpad/2),diffspec(1:size(v,2)/2)/max(max(diffspec(1:size(v,2)/2))));
-axis([1,12,0,1]);
-xlabel('Range (m)');
-ylabel('Normalized amplitude (V)');
+figure;
+diffspec=std(spec(:,1:size(v,2)/2),0,1);
+plot(linspace(0,max_range,zpad/2),diffspec(1:size(v,2)/2)/max(max(diffspec(1:size(v,2)/2))));
+axis([0,8,0,1]);
+xlabel('range (m)');
+ylabel('Amplitude');
 
 %% average
 % figure(2)
