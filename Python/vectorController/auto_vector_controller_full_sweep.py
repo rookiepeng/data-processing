@@ -2,7 +2,7 @@
 
 ####
 # Automated measurement script for vector controller (Full voltage sweept)
-# Python 3
+# Python 3.X
 #
 # Instruments:
 #        1) Agilent 8722ES Vector Network Analyzer
@@ -35,23 +35,26 @@
 #             /          \
 #			 /  Region2   \
 #
-# Version 1
+# Version 3
 #
 # By: Zhengyu Peng
 #     zhengyu.peng@ttu.edu
-#     Nov. 05, 2015
+#     Sep. 14, 2016
 ####
 
 import datetime
 import time
 import visa
+import os
 
-voltInit = 770	# mV
+########### Configuration ###########
+voltInit = 350	# mV
 voltStep = 5	# mV
 voltStepAmp = 5 # mV
-voltStop = 1500 + voltStepAmp	#mV
+voltStop = 800 + voltStepAmp	#mV
+########### /Configuration ###########
 
-now = now=datetime.datetime.now()
+now = datetime.datetime.now()
 timestamp = now.strftime("%Y%m%d %H%M%S")
 
 rm = visa.ResourceManager()
@@ -69,23 +72,45 @@ power = rm.open_resource(res[int(powerNumber)])
 print(power.query("*IDN?"))
 
 power.write(":sour1:func:mode volt")
-power.write(":sour1:volt "+"0.77")
+power.write(":sour1:volt "+str(voltInit/1000))
 power.write(":sens1:curr:prot 0.2")
 power.write(":outp1 on")
 
 power.write(":sour2:func:mode volt")
-power.write(":sour2:volt "+"0.77")
+power.write(":sour2:volt "+str(voltInit/1000))
 power.write(":sens2:curr:prot 0.2")
 power.write(":outp2 on")
 
 vna.write("S21")	# Measure S21
 vna.write("FORM4")	# ASCII Format
+
+########### Configuration ###########
 vna.write("MARK1")	# enable MARK 1
-vna.write("MARKBUCK688")  # set the Mark to 688th point, which is 24.3 GHz with the range from 20 GHz to 30 GHz and 1601 points
+vna.write("MARKBUCK528")  # set the Mark to 640th point, which is 23.3 GHz with the range from 20 GHz to 30 GHz and 1601 points
+vna.write("MARK2")	# enable MARK 2
+vna.write("MARKBUCK576")  # 23.6 GHz
+vna.write("MARK3")	# enable MARK 3
+vna.write("MARKBUCK592")  # 23.7 GHz
+vna.write("MARK4")	# enable MARK 4
+vna.write("MARKBUCK608")  # 23.8 GHz
+vna.write("MARK5")	# enable MARK 5
+vna.write("MARKBUCK624")  # 23.9 GHz
+
+if not os.path.exists('MARK1'):
+    os.makedirs('MARK1')
+if not os.path.exists('MARK2'):
+    os.makedirs('MARK2')
+if not os.path.exists('MARK3'):
+    os.makedirs('MARK3')
+if not os.path.exists('MARK4'):
+    os.makedirs('MARK4')
+if not os.path.exists('MARK5'):
+    os.makedirs('MARK5')
+########### /Configuration ###########
 
 count = 0;
 
-for voltInit in range (770, 1140, voltStepAmp):
+for voltInit in range (voltInit, voltStop, voltStepAmp):
 	voltStop = voltStop - voltStepAmp
 	count = count + 1
 	print("######## Voltage range: " + str(voltInit) + "V to " + str(voltStop) + "V ########\n")
@@ -98,24 +123,80 @@ for voltInit in range (770, 1140, voltStepAmp):
 
 		print("    -> Change to Log Mag View")
 		vna.write("LOGM")
-		time.sleep(5)	# 5s
+		time.sleep(4)	# 5s
 		print("        -> Read Log Mag Data")
 		vna.write("OUTPMARK1")
-		amp = vna.read_raw()
-		amp = amp.decode("utf-8")
-		markAmp = amp[1:14]
+		amp1 = vna.read_raw()
+		amp1 = amp1.decode("utf-8")
+		markAmp1 = amp1[1:14]
+
+		vna.write("OUTPMARK2")
+		amp2 = vna.read_raw()
+		amp2 = amp2.decode("utf-8")
+		markAmp2 = amp2[1:14]
+
+		vna.write("OUTPMARK3")
+		amp3 = vna.read_raw()
+		amp3 = amp3.decode("utf-8")
+		markAmp3 = amp3[1:14]
+
+		vna.write("OUTPMARK4")
+		amp4 = vna.read_raw()
+		amp4 = amp4.decode("utf-8")
+		markAmp4 = amp4[1:14]
+
+		vna.write("OUTPMARK5")
+		amp5 = vna.read_raw()
+		amp5 = amp5.decode("utf-8")
+		markAmp5 = amp5[1:14]
 
 		print("    -> Change to Phase View")
 		vna.write("PHAS")
-		time.sleep(1)	# 1s
+		time.sleep(0.5)	# 1s
 		print("        -> Read Phase Data")
 		vna.write("OUTPMARK1")
-		phs = vna.read_raw()
-		phs = phs.decode("utf-8")
-		markPhs = phs[1:14]
+		phs1 = vna.read_raw()
+		phs1 = phs1.decode("utf-8")
+		markPhs1 = phs1[1:14]
 
-		famp = open(str(count) + 'Region1 ' + timestamp, 'a')
-		famp.write(str(voltmm) + " " + str(voltInit) + " " + markAmp + " " + markPhs + "\n" )
+		vna.write("OUTPMARK2")
+		phs2 = vna.read_raw()
+		phs2 = phs2.decode("utf-8")
+		markPhs2 = phs2[1:14]
+
+		vna.write("OUTPMARK3")
+		phs3 = vna.read_raw()
+		phs3 = phs3.decode("utf-8")
+		markPhs3 = phs3[1:14]
+
+		vna.write("OUTPMARK4")
+		phs4 = vna.read_raw()
+		phs4 = phs4.decode("utf-8")
+		markPhs4 = phs4[1:14]
+
+		vna.write("OUTPMARK5")
+		phs5 = vna.read_raw()
+		phs5 = phs5.decode("utf-8")
+		markPhs5 = phs5[1:14]
+
+		famp = open('MARK1/' + str(count) + 'Region1 ' + timestamp, 'a')
+		famp.write(str(voltmm) + " " + str(voltInit) + " " + markAmp1 + " " + markPhs1 + "\n" )
+		famp.close()
+
+		famp = open('MARK2/' + str(count) + 'Region1 ' + timestamp, 'a')
+		famp.write(str(voltmm) + " " + str(voltInit) + " " + markAmp2 + " " + markPhs2 + "\n" )
+		famp.close()
+
+		famp = open('MARK3/' + str(count) + 'Region1 ' + timestamp, 'a')
+		famp.write(str(voltmm) + " " + str(voltInit) + " " + markAmp3 + " " + markPhs3 + "\n" )
+		famp.close()
+
+		famp = open('MARK4/' + str(count) + 'Region1 ' + timestamp, 'a')
+		famp.write(str(voltmm) + " " + str(voltInit) + " " + markAmp4 + " " + markPhs4 + "\n" )
+		famp.close()
+
+		famp = open('MARK5/' + str(count) + 'Region1 ' + timestamp, 'a')
+		famp.write(str(voltmm) + " " + str(voltInit) + " " + markAmp5 + " " + markPhs5 + "\n" )
 		famp.close()
 
 	print("### Region 2 ###")
@@ -126,24 +207,80 @@ for voltInit in range (770, 1140, voltStepAmp):
 
 		print("    -> Change to Log Mag View")
 		vna.write("LOGM")
-		time.sleep(5)	# 5s
+		time.sleep(4)	# 5s
 		print("        -> Read Log Mag Data")
 		vna.write("OUTPMARK1")
-		amp = vna.read_raw()
-		amp = amp.decode("utf-8")
-		markAmp = amp[1:14]
+		amp1 = vna.read_raw()
+		amp1 = amp1.decode("utf-8")
+		markAmp1 = amp1[1:14]
+
+		vna.write("OUTPMARK2")
+		amp2 = vna.read_raw()
+		amp2 = amp2.decode("utf-8")
+		markAmp2 = amp2[1:14]
+
+		vna.write("OUTPMARK3")
+		amp3 = vna.read_raw()
+		amp3 = amp3.decode("utf-8")
+		markAmp3 = amp3[1:14]
+
+		vna.write("OUTPMARK4")
+		amp4 = vna.read_raw()
+		amp4 = amp4.decode("utf-8")
+		markAmp4 = amp4[1:14]
+
+		vna.write("OUTPMARK5")
+		amp5 = vna.read_raw()
+		amp5 = amp5.decode("utf-8")
+		markAmp5 = amp5[1:14]
 
 		print("    -> Change to Phase View")
 		vna.write("PHAS")
-		time.sleep(1)	# 1s
+		time.sleep(0.5)	# 1s
 		print("        -> Read Phase Data")
 		vna.write("OUTPMARK1")
-		phs = vna.read_raw()
-		phs = phs.decode("utf-8")
-		markPhs = phs[1:14]
+		phs1 = vna.read_raw()
+		phs1 = phs1.decode("utf-8")
+		markPhs1 = phs1[1:14]
 
-		famp = open(str(count) + 'Region2 ' + timestamp, 'a')
-		famp.write(str(voltStop) + " " +str(voltmm) + " " + markAmp + " " + markPhs + "\n" )
+		vna.write("OUTPMARK2")
+		phs2 = vna.read_raw()
+		phs2 = phs2.decode("utf-8")
+		markPhs2 = phs2[1:14]
+
+		vna.write("OUTPMARK3")
+		phs3 = vna.read_raw()
+		phs3 = phs3.decode("utf-8")
+		markPhs3 = phs3[1:14]
+
+		vna.write("OUTPMARK4")
+		phs4 = vna.read_raw()
+		phs4 = phs4.decode("utf-8")
+		markPhs4 = phs4[1:14]
+
+		vna.write("OUTPMARK5")
+		phs5 = vna.read_raw()
+		phs5 = phs5.decode("utf-8")
+		markPhs5 = phs5[1:14]
+
+		famp = open('MARK1/' + str(count) + 'Region2 ' + timestamp, 'a')
+		famp.write(str(voltStop) + " " +str(voltmm) + " " + markAmp1 + " " + markPhs1 + "\n" )
+		famp.close()
+
+		famp = open('MARK2/' + str(count) + 'Region2 ' + timestamp, 'a')
+		famp.write(str(voltStop) + " " +str(voltmm) + " " + markAmp2 + " " + markPhs2 + "\n" )
+		famp.close()
+
+		famp = open('MARK3/' + str(count) + 'Region2 ' + timestamp, 'a')
+		famp.write(str(voltStop) + " " +str(voltmm) + " " + markAmp3 + " " + markPhs3 + "\n" )
+		famp.close()
+
+		famp = open('MARK4/' + str(count) + 'Region2 ' + timestamp, 'a')
+		famp.write(str(voltStop) + " " +str(voltmm) + " " + markAmp4 + " " + markPhs4 + "\n" )
+		famp.close()
+
+		famp = open('MARK5/' + str(count) + 'Region2 ' + timestamp, 'a')
+		famp.write(str(voltStop) + " " +str(voltmm) + " " + markAmp5 + " " + markPhs5 + "\n" )
 		famp.close()
 
 	print("### Region 3 ###")
@@ -154,24 +291,80 @@ for voltInit in range (770, 1140, voltStepAmp):
 
 		print("    -> Change to Log Mag View")
 		vna.write("LOGM")
-		time.sleep(5)	# 5s
+		time.sleep(4)	# 5s
 		print("        -> Read Log Mag Data")
 		vna.write("OUTPMARK1")
-		amp = vna.read_raw()
-		amp = amp.decode("utf-8")
-		markAmp = amp[1:14]
+		amp1 = vna.read_raw()
+		amp1 = amp1.decode("utf-8")
+		markAmp1 = amp1[1:14]
+
+		vna.write("OUTPMARK2")
+		amp2 = vna.read_raw()
+		amp2 = amp2.decode("utf-8")
+		markAmp2 = amp2[1:14]
+
+		vna.write("OUTPMARK3")
+		amp3 = vna.read_raw()
+		amp3 = amp3.decode("utf-8")
+		markAmp3 = amp3[1:14]
+
+		vna.write("OUTPMARK4")
+		amp4 = vna.read_raw()
+		amp4 = amp4.decode("utf-8")
+		markAmp4 = amp4[1:14]
+
+		vna.write("OUTPMARK5")
+		amp5 = vna.read_raw()
+		amp5 = amp5.decode("utf-8")
+		markAmp5 = amp5[1:14]
 
 		print("    -> Change to Phase View")
 		vna.write("PHAS")
-		time.sleep(1)	# 1s
+		time.sleep(0.5)	# 1s
 		print("        -> Read Phase Data")
 		vna.write("OUTPMARK1")
-		phs = vna.read_raw()
-		phs = phs.decode("utf-8")
-		markPhs = phs[1:14]
+		phs1 = vna.read_raw()
+		phs1 = phs1.decode("utf-8")
+		markPhs1 = phs1[1:14]
 
-		famp = open(str(count) + 'Region3 ' + timestamp, 'a')
-		famp.write(str(voltmm) + " " + str(voltStop) + " " + markAmp + " " + markPhs + "\n" )
+		vna.write("OUTPMARK2")
+		phs2 = vna.read_raw()
+		phs2 = phs2.decode("utf-8")
+		markPhs2 = phs2[1:14]
+
+		vna.write("OUTPMARK3")
+		phs3 = vna.read_raw()
+		phs3 = phs3.decode("utf-8")
+		markPhs3 = phs3[1:14]
+
+		vna.write("OUTPMARK4")
+		phs4 = vna.read_raw()
+		phs4 = phs4.decode("utf-8")
+		markPhs4 = phs4[1:14]
+
+		vna.write("OUTPMARK5")
+		phs5 = vna.read_raw()
+		phs5 = phs5.decode("utf-8")
+		markPhs5 = phs5[1:14]
+
+		famp = open('MARK1/' + str(count) + 'Region3 ' + timestamp, 'a')
+		famp.write(str(voltmm) + " " + str(voltStop) + " " + markAmp1 + " " + markPhs1 + "\n" )
+		famp.close()
+
+		famp = open('MARK2/' + str(count) + 'Region3 ' + timestamp, 'a')
+		famp.write(str(voltmm) + " " + str(voltStop) + " " + markAmp2 + " " + markPhs2 + "\n" )
+		famp.close()
+
+		famp = open('MARK3/' + str(count) + 'Region3 ' + timestamp, 'a')
+		famp.write(str(voltmm) + " " + str(voltStop) + " " + markAmp3 + " " + markPhs3 + "\n" )
+		famp.close()
+
+		famp = open('MARK4/' + str(count) + 'Region3 ' + timestamp, 'a')
+		famp.write(str(voltmm) + " " + str(voltStop) + " " + markAmp4 + " " + markPhs4 + "\n" )
+		famp.close()
+
+		famp = open('MARK5/' + str(count) + 'Region3 ' + timestamp, 'a')
+		famp.write(str(voltmm) + " " + str(voltStop) + " " + markAmp5 + " " + markPhs5 + "\n" )
 		famp.close()
 
 	print("### Region 4 ###")
@@ -182,24 +375,80 @@ for voltInit in range (770, 1140, voltStepAmp):
 
 		print("    -> Change to Log Mag View")
 		vna.write("LOGM")
-		time.sleep(5)	# 5s
+		time.sleep(4)	# 5s
 		print("        -> Read Log Mag Data")
 		vna.write("OUTPMARK1")
-		amp = vna.read_raw()
-		amp = amp.decode("utf-8")
-		markAmp = amp[1:14]
+		amp1 = vna.read_raw()
+		amp1 = amp1.decode("utf-8")
+		markAmp1 = amp1[1:14]
+
+		vna.write("OUTPMARK2")
+		amp2 = vna.read_raw()
+		amp2 = amp2.decode("utf-8")
+		markAmp2 = amp2[1:14]
+
+		vna.write("OUTPMARK3")
+		amp3 = vna.read_raw()
+		amp3 = amp3.decode("utf-8")
+		markAmp3 = amp3[1:14]
+
+		vna.write("OUTPMARK4")
+		amp4 = vna.read_raw()
+		amp4 = amp4.decode("utf-8")
+		markAmp4 = amp4[1:14]
+
+		vna.write("OUTPMARK5")
+		amp5 = vna.read_raw()
+		amp5 = amp5.decode("utf-8")
+		markAmp5 = amp5[1:14]
 
 		print("    -> Change to Phase View")
 		vna.write("PHAS")
-		time.sleep(1)	# 1s
+		time.sleep(0.5)	# 1s
 		print("        -> Read Phase Data")
 		vna.write("OUTPMARK1")
-		phs = vna.read_raw()
-		phs = phs.decode("utf-8")
-		markPhs = phs[1:14]
+		phs1 = vna.read_raw()
+		phs1 = phs1.decode("utf-8")
+		markPhs1 = phs1[1:14]
 
-		famp = open(str(count) + 'Region4 ' + timestamp, 'a')
-		famp.write(str(voltInit) + " " + str(voltmm) + " " + markAmp + " " + markPhs + "\n" )
+		vna.write("OUTPMARK2")
+		phs2 = vna.read_raw()
+		phs2 = phs2.decode("utf-8")
+		markPhs2 = phs2[1:14]
+
+		vna.write("OUTPMARK3")
+		phs3 = vna.read_raw()
+		phs3 = phs3.decode("utf-8")
+		markPhs3 = phs3[1:14]
+
+		vna.write("OUTPMARK4")
+		phs4 = vna.read_raw()
+		phs4 = phs4.decode("utf-8")
+		markPhs4 = phs4[1:14]
+
+		vna.write("OUTPMARK5")
+		phs5 = vna.read_raw()
+		phs5 = phs5.decode("utf-8")
+		markPhs5 = phs5[1:14]
+
+		famp = open('MARK1/' + str(count) + 'Region4 ' + timestamp, 'a')
+		famp.write(str(voltInit) + " " + str(voltmm) + " " + markAmp1 + " " + markPhs1 + "\n" )
+		famp.close()
+
+		famp = open('MARK2/' + str(count) + 'Region4 ' + timestamp, 'a')
+		famp.write(str(voltInit) + " " + str(voltmm) + " " + markAmp2 + " " + markPhs2 + "\n" )
+		famp.close()
+
+		famp = open('MARK3/' + str(count) + 'Region4 ' + timestamp, 'a')
+		famp.write(str(voltInit) + " " + str(voltmm) + " " + markAmp3 + " " + markPhs3 + "\n" )
+		famp.close()
+
+		famp = open('MARK4/' + str(count) + 'Region4 ' + timestamp, 'a')
+		famp.write(str(voltInit) + " " + str(voltmm) + " " + markAmp4 + " " + markPhs4 + "\n" )
+		famp.close()
+
+		famp = open('MARK5/' + str(count) + 'Region4 ' + timestamp, 'a')
+		famp.write(str(voltInit) + " " + str(voltmm) + " " + markAmp5 + " " + markPhs5 + "\n" )
 		famp.close()
 
 power.write(":outp1 off")
