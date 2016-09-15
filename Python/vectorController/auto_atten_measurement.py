@@ -37,9 +37,9 @@ import datetime
 import time
 import visa
 
-voltInit = 770	#mV
-voltStep = 5	#mV
-voltStop = 1500	#mV
+voltInit = 0	#mV
+voltStep = 1	#mV
+voltStop = 800	#mV
 
 now = now=datetime.datetime.now()
 timestamp = now.strftime("%Y%m%d %H%M%S")
