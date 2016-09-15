@@ -36,7 +36,7 @@ import datetime
 import time
 import visa
 
-now = now=datetime.datetime.now()
+now = datetime.datetime.now()
 timestamp = now.strftime("%Y%m%d %H%M%S")
 
 rm = visa.ResourceManager()
@@ -61,7 +61,7 @@ phsName='Phs ' + angleStart + '_' + angleStop + '_' + angleStep + '_' + timestam
 
 for voltInit in angle (angleStart, angleStop, angleStep):
 
-    measure = input('Press enter to measure ' + str(angle) + ' --> ')
+    measure = input('Press enter to measure ' + str(angle) + '(Degree) --> ')
     
     print("-> Change to Log Mag View")
     vna.write("LOGM")
@@ -93,7 +93,5 @@ for voltInit in angle (angleStart, angleStop, angleStep):
     fphs.write(phs + "\n")
     fphs.close()
 
-#power.write(":outp off")
 vna.close()
-#power.close()
 print("--Finish--")
