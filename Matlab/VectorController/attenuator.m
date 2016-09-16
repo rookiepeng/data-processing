@@ -54,7 +54,7 @@ plot(Voltage,amp1(:,fNum));
 %legend('Attenuator 1','Attenuator 2');
 xlabel('Bias voltage (mV)');
 ylabel('Attenuation (dB)');
-title('At 24GHz')
+%title('At 24GHz')
 
 figure;
 fNum=fix((targetF-startF)/deltaF)+1;
