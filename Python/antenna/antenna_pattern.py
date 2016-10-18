@@ -56,16 +56,16 @@ angleStart = int(input('Angle start from (Degree) --> '))   #
 angleStop = int(input('Angle stop to (Degree) --> '))
 angleStep = int(input('Angle rotating step (Degree) --> '))
 
-megName='Meg ' + angleStart + '_' + angleStop + '_' + angleStep + '_' + timestamp
-phsName='Phs ' + angleStart + '_' + angleStop + '_' + angleStep + '_' + timestamp
+megName='Meg ' + str(angleStart) + '_' + str(angleStop) + '_' + str(angleStep) + '_' + timestamp
+phsName='Phs ' + str(angleStart) + '_' + str(angleStop) + '_' + str(angleStep) + '_' + timestamp
 
-for voltInit in angle (angleStart, angleStop, angleStep):
+for angle in range (angleStart, angleStop+angleStep, angleStep):
 
     measure = input('Press enter to measure ' + str(angle) + '(Degree) --> ')
     
     print("-> Change to Log Mag View")
     vna.write("LOGM")
-    time.sleep(5)	# 5s
+    time.sleep(1)	# 5s
     print("-> Read Log Mag Data")
     vna.write("OUTPFORM")
     meg = vna.read_raw()
