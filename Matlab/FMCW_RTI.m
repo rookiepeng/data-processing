@@ -10,11 +10,11 @@ close all;
 
 %% system parameters
 chirp=295; % (Hz) frequency of chirp signal
-dataName='person far';
+dataName='test';
 BW=600E6;
-offsetBegin=14;
+offsetBegin=0;
 %offsetEnd=292+37;
-offsetEnd=292;
+offsetEnd=0;
 thresh = 0.4;
 
 %% constants
