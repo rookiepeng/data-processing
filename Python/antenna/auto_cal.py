@@ -92,7 +92,6 @@ power.write(":sour2:volt "+str(voltInit/1000))
 power.write(":sens2:curr:prot 0.2")
 power.write(":outp2 on")
 
-
 powerTek.write("INSTrument:NSELect 2")	# port 2
 powerTek.write("SOURce:VOLTage 0.59")
 powerTek.write("SOURce:CURRent 0.8")
