@@ -22,7 +22,7 @@ ylabel('Amplitude (V)');
 X1=fft(x);
 f1=n*fs/Ndata;
 subplot(2,2,2);
-plot(f1(1:Ndata/2),abs(X1(1:Ndata/2))*2/Ndata);
+plot(f1(1:Ndata/2),abs(X1(1:Ndata/2))/length(x));
 title('Frequency domain (without zero padding)')
 xlabel('Frequency (Hz)');
 ylabel('Amplitude (V)');
@@ -42,7 +42,7 @@ ylabel('Amplitude (V)');
 X2=fft(x,N);
 f2=(0:N-1)*fs/N;
 subplot(2,2,4);
-plot(f2(1:N/2),abs(X2(1:N/2))*2/Ndata);
+plot(f2(1:N/2),abs(X2(1:N/2))/length(x));
 title('Frequency domain (with zero padding)')
 xlabel('Frequency (Hz)');
 ylabel('Amplitude (V)');
